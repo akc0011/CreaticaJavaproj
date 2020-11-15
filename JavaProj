@@ -1,0 +1,365 @@
+import java.awt.event.*;
+import java.awt.*;
+import javax.swing.*;
+
+public class Quiz implements ActionListener {
+
+    //Climate Change Quiz:
+
+    String[] questions = {
+            "Why shouldn’t you let water run for no reason?",
+            "What aspects of your life do you think are affected by climate change?",
+            "What is the Green New Deal? ",
+            "What is the process of fracking? ",
+            "Which industry causes the most pollution?",
+            "What is an effect of climate change on human health?",
+            "What is the best thing you can do to reduce your carbon footprint?\n",
+            "What is a major consequence of climate change?",
+            "How is climate change altering precipitation in the U.S.?",
+            "How many years do you think this planet has left if we continue down this path?"
+
+    };
+    String[][] options = {
+            {"Continuous water flow could cause leaking in my house.", "Because the water flowing could cause my pipelines to burst.", "Because leaving the water on can cause flooding in my tub/sink.", " Leaving running water if not being used is wasteful and can cause sewage pipeline overflows. "},
+            {"My travel plans", "The weather where I live", "The sea levels which may rise & flood cities", "All of the above."},
+            {"A bill being passed to stop cars from emitting carbon emissions", "A set of eco friendly ideas to help with global warming", "A climate proposal ensuring carbon emissions are reduced","A new method of negotiating with oil companies to lower gas prices"},
+            {"The procedure of mining coal to extract chemical compounds that make gas","Drilling into the earth to inject liquid into rocks to extract oil ","Drilling into the ocean to draw out fossil fuels that may contain gas.","The process of fracturing mountains to get to the core for minerals."},
+            {"Fuel","Fashion","Agriculture","Food"},
+            {"Poor air quality","Waterborne diseases","Reduced food and water quality","All of the above"},
+            {" Eat a plant-based diet","Turn off your lights more often","Turn off the water when brushing your teeth","Hang your clothes to dry"},
+            {"Severe weather events (heat waves, droughts, wildfires)","Melting of glaciers and ice caps"," extinction of animals, insects and plants"," all of the above"},
+            {" Increasing length of droughts everywhere"," Increasing extreme precipitation everywhere","Increase in both wet and dry extremes","Climate change has no effect on precipitation"},
+            {"7 years", " 20 years", " 50 years", "100 years"}
+    };
+
+    //Correct Answers to the questions
+    char[] answers = {
+            'D', //q1
+            'D', //q2
+            'C', //q3
+            'B', //q4
+            'A', //q5
+            'D', //q6
+            'A', //q7
+            'D', //q8
+            'C', //q9
+            'A'  //q10
+    };
+
+    char guess;
+    char answer;
+    int index;
+    int correct_guesses = 0;
+    int total_questions = questions.length;
+    int result;
+
+    JFrame frame = new JFrame();
+    JTextField textfield = new JTextField();
+    JTextArea textarea = new JTextArea();
+
+    //show the gui buttons
+    JButton buttonA = new JButton();
+    JButton buttonB = new JButton();
+    JButton buttonC = new JButton();
+    JButton buttonD = new JButton();
+
+    //display the answers for the choices
+    JLabel answer_labelA = new JLabel();
+    JLabel answer_labelB = new JLabel();
+    JLabel answer_labelC = new JLabel();
+    JLabel answer_labelD = new JLabel();
+
+
+    //the gui box for time
+    JLabel time_label = new JLabel();
+
+    //the gui for seconds left
+    //JLabel seconds_left = new JLabel();
+
+    //the Gui # correct
+    JTextField number_right = new JTextField();
+
+    //gui for %
+    JTextField percentage = new JTextField();
+
+
+    public Quiz() {
+
+        //How to Open the GUI
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        //The window (size) of the main gui
+        frame.setSize(1000, 800);
+
+        //RGB COLOR
+
+        //Background Color 95,158,160)
+        frame.getContentPane().setBackground(new Color(95, 158, 160));
+
+        frame.setLayout(null);
+        frame.setResizable(false);
+
+        textfield.setBounds(10,0,880,50);
+
+        //Title Box Color
+        textfield.setBackground(new Color(95, 158, 160));
+
+        //Font for title  255,255,255
+        textfield.setForeground(new Color(255, 255, 255));
+        textfield.setFont(new Font("Times New Roman", Font.BOLD, 30));
+
+        textfield.setBorder(BorderFactory.createBevelBorder(1));
+        textfield.setHorizontalAlignment(JTextField.CENTER);
+        textfield.setEditable(false);
+        textarea.setBounds(10, 100, 880, 136);
+        textarea.setLineWrap(true);
+        textarea.setWrapStyleWord(true);
+
+        //Question Box Color
+        textarea.setBackground(new Color(95, 158, 160));
+
+        //Question Font Color
+        textarea.setForeground(new Color(255, 255, 255));
+        textarea.setFont(new Font("Times New Roman", Font.BOLD, 35));
+
+        textarea.setBorder(BorderFactory.createBevelBorder(1));
+        textarea.setEditable(false);
+
+
+        //Buttons GUI:
+        buttonA.setBounds(5, 250, 100, 100);
+        buttonA.setFont(new Font("Times New Roman", Font.BOLD, 35));
+        buttonA.setFocusable(false);
+        buttonA.addActionListener(this);
+        buttonA.setText("A");
+
+
+        buttonB.setBounds(5, 370, 100, 100);
+        buttonB.setFont(new Font("Times New Roman", Font.BOLD, 35));
+        buttonB.setFocusable(false);
+        buttonB.addActionListener(this);
+        buttonB.setText("B");
+
+        buttonC.setBounds(5, 490, 100, 100);
+        buttonC.setFont(new Font("Times New Roman", Font.BOLD, 35));
+        buttonC.setFocusable(false);
+        buttonC.addActionListener(this);
+        buttonC.setText("C");
+
+        buttonD.setBounds(5, 610, 100, 100);
+        buttonD.setFont(new Font("Times New Roman", Font.BOLD, 35));
+        buttonD.setFocusable(false);
+        buttonD.addActionListener(this);
+        buttonD.setText("D");
+
+
+        //The answers GUI
+
+        answer_labelA.setBounds(125, 250, 950, 100);
+        answer_labelA.setBackground(new Color(50, 50, 50));
+        answer_labelA.setForeground(new Color(255, 255, 255));
+        answer_labelA.setFont(new Font("Times New Roman", Font.PLAIN, 20));
+
+        answer_labelB.setBounds(125, 370, 950, 100);
+        answer_labelB.setBackground(new Color(50, 50, 50));
+        answer_labelB.setForeground(new Color(255, 255, 255));
+        answer_labelB.setFont(new Font("Times New Roman", Font.PLAIN, 20));
+
+        answer_labelC.setBounds(125, 490, 950, 100);
+        answer_labelC.setBackground(new Color(50, 50, 50));
+        answer_labelC.setForeground(new Color(255, 255, 255));
+        answer_labelC.setFont(new Font("Times New Roman", Font.PLAIN, 20));
+
+        answer_labelD.setBounds(125, 610, 950, 100);
+        answer_labelD.setBackground(new Color(50, 50, 50));
+        answer_labelD.setForeground(new Color(255, 255, 255));
+        answer_labelD.setFont(new Font("Times New Roman", Font.PLAIN, 20));
+
+
+
+
+
+        //GUI counting how many questions were correct vs wrong
+
+        number_right.setBounds(130, 325, 700, 400);
+        number_right.setBackground(new Color(192, 192, 192));
+        number_right.setForeground(new Color(46, 139, 87));
+        number_right.setFont(new Font("Times New Roman", Font.BOLD, 15));
+        number_right.setBorder(BorderFactory.createBevelBorder(0));
+        number_right.setHorizontalAlignment(JTextField.CENTER);
+        number_right.setEditable(false);
+
+        //GUI for percent (your score display)
+        percentage.setBounds(130, 225, 700, 100);
+
+        percentage.setBackground(new Color(192, 192, 192));
+        percentage.setForeground(new Color(0, 0, 0));
+        percentage.setFont(new Font("Times New Roman", Font.BOLD, 50));
+        percentage.setBorder(BorderFactory.createBevelBorder(0));
+        percentage.setHorizontalAlignment(JTextField.CENTER);
+        percentage.setEditable(false);
+
+        //Adding all the GUI to the main windows:
+        frame.add(answer_labelA);
+        frame.add(answer_labelB);
+        frame.add(answer_labelC);
+        frame.add(answer_labelD);
+        frame.add(buttonA);
+        frame.add(buttonB);
+        frame.add(buttonC);
+        frame.add(buttonD);
+        frame.add(textarea);
+        frame.add(textfield);
+
+        //Make it visable
+        frame.setVisible(true);
+
+        nextQuestion();
+    }
+    //Go through the next questions
+    public void nextQuestion() {
+
+        if (index >= total_questions) {
+            results();
+        } else {
+            textfield.setText("How much do you really know about Climate Change?");
+
+            textarea.setText((index+1)+"."+ questions[index]);
+            answer_labelA.setText(options[index][0]);
+            answer_labelB.setText(options[index][1]);
+            answer_labelC.setText(options[index][2]);
+            answer_labelD.setText(options[index][3]);
+            //timer.start();
+        }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+        buttonA.setEnabled(false);
+        buttonB.setEnabled(false);
+        buttonC.setEnabled(false);
+        buttonD.setEnabled(false);
+
+        if (e.getSource() == buttonA) {
+            answer = 'A';
+            if (answer == answers[index]) {
+                correct_guesses++;
+            }
+        }
+        if (e.getSource() == buttonB) {
+            answer = 'B';
+            if (answer == answers[index]) {
+                correct_guesses++;
+            }
+        }
+        if (e.getSource() == buttonC) {
+            answer = 'C';
+            if (answer == answers[index]) {
+                correct_guesses++;
+            }
+        }
+        if (e.getSource() == buttonD) {
+            answer = 'D';
+            if (answer == answers[index]) {
+                correct_guesses++;
+            }
+        }
+        displayAnswer();
+    }
+
+    public void displayAnswer() {
+
+        //timer.stop();
+
+        buttonA.setEnabled(false);
+        buttonB.setEnabled(false);
+        buttonC.setEnabled(false);
+        buttonD.setEnabled(false);
+
+        if (answers[index] != 'A')
+            answer_labelA.setForeground(new Color(255, 0, 0));
+        if (answers[index] != 'B')
+            answer_labelB.setForeground(new Color(255, 0, 0));
+        if (answers[index] != 'C')
+            answer_labelC.setForeground(new Color(255, 0, 0));
+        if (answers[index] != 'D')
+            answer_labelD.setForeground(new Color(255, 0, 0));
+
+        Timer pause = new Timer(2000, new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+
+//RED
+                answer_labelA.setForeground(new Color(255, 255, 255));
+                answer_labelB.setForeground(new Color(255, 255, 255));
+                answer_labelC.setForeground(new Color(255, 255, 255));
+                answer_labelD.setForeground(new Color(255, 255, 255));
+
+                answer = ' ';
+                //seconds = 10;
+               // seconds_left.setText(String.valueOf(seconds));
+                buttonA.setEnabled(true);
+                buttonB.setEnabled(true);
+                buttonC.setEnabled(true);
+                buttonD.setEnabled(true);
+                index++;
+                nextQuestion();
+            }
+        });
+        pause.setRepeats(false);
+        pause.start();
+    }
+    //print out the answers
+    public void results() {
+
+        buttonA.setEnabled(false);
+        buttonB.setEnabled(false);
+        buttonC.setEnabled(false);
+        buttonD.setEnabled(false);
+
+        //Percent score
+        result = (int) ((correct_guesses / (double) total_questions) * 100);
+
+        textfield.setText("RESULTS!");
+        textarea.setText("");
+        answer_labelA.setText("");
+        answer_labelB.setText("");
+        answer_labelC.setText("");
+        answer_labelD.setText("");
+
+        //Number right depends on what score
+        if(result>=80) {
+            number_right.setText("You know a lot on Climate change, continue!");
+        }
+        else if(result<=70 && result>=50) {
+            number_right.setText("You know some things.Definitely learn more!");
+        }
+        else if(result<=40 && result>=20) {
+            number_right.setText(" You should learn more about the crisis that is slowly affecting our lives");
+        }
+        else
+            number_right.setText(" Seems like your knowledge on climate change is very minimal.");
+
+
+
+
+        percentage.setText(result + "%");
+
+        //say something if a certain % to help
+
+        frame.add(number_right);
+        frame.add(percentage);
+
+    }
+}
+
+public class Main {
+
+    public static void main(String[] args) {
+
+        Quiz quiz = new Quiz();
+    }
+}
